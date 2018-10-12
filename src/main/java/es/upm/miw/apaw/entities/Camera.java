@@ -3,7 +3,7 @@ package es.upm.miw.apaw.entities;
 public class Camera {
     private String id;
 
-    private String reference;
+    private String description;
 
     private boolean digital;
 
@@ -11,9 +11,9 @@ public class Camera {
         this.id = id;
     }
 
-    public Camera(String id, String reference, boolean digital) {
+    public Camera(String id, String description, boolean digital) {
         this.id = id;
-        this.reference = reference;
+        this.description = description;
         this.digital = digital;
     }
 
@@ -21,12 +21,12 @@ public class Camera {
         return id;
     }
 
-    public String getReference() {
-        return reference;
+    public String getDescription() {
+        return description;
     }
 
-    public void setReference(String reference) {
-        this.reference = reference;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public boolean isDigital() {
