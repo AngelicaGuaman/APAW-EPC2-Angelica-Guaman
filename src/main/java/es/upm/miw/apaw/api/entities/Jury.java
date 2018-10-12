@@ -1,4 +1,4 @@
-package es.upm.miw.apaw.entities;
+package es.upm.miw.apaw.api.entities;
 
 public class Jury {
     private String id;
