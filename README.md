@@ -21,6 +21,8 @@ A continuación, se muestra el escenario escogido para el desarrollo de ésta pr
 ## Diseño de entidades
 ![entities](https://github.com/AngelicaGuaman/APAW-EPC2-Angelica-Guaman/blob/develop/docs/entities/entities.png)
 
+## Diseño de entidades (con Herencia)
+![entities](https://github.com/AngelicaGuaman/APAW-EPC2-Angelica-Guaman/blob/develop/docs/entities/entities-inheritance.png)
 
 ## Arquitectura
 ![themes-entities-class-diagram](https://github.com/AngelicaGuaman/APAW-EPC2-Angelica-Guaman/blob/develop/docs/architecture/themes-architecture-diagram.png)
@@ -64,7 +66,8 @@ A continuación, se muestra el escenario escogido para el desarrollo de ésta pr
 ---
 ### POST /juries
 #### Parámetros del cuerpo
-- `email`: String (**requerido**)
+- `nick`: String (**requerido**)
+- `email`: String
 #### Respuesta
 - 200 OK
   - `id`: String
