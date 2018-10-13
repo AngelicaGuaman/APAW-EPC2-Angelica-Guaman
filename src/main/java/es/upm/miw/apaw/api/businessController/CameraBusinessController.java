@@ -11,4 +11,8 @@ public class CameraBusinessController {
         DaoFactory.getFactory().getCameraDao().save(camera);
         return camera.getId();
     }
+
+    public void delete(String cameraId) {
+        DaoFactory.getFactory().getCameraDao().deleteById(cameraId);
+    }
 }
