@@ -1,23 +1,14 @@
-package es.upm.miw.apaw.api.entities;
+package es.upm.miw.apaw.api.dtos;
 
-public class Camera {
-    private String id;
+public class CameraDto {
 
     private String description;
 
     private boolean digital;
 
-    public Camera(String description, boolean digital) {
+    public CameraDto(String description, boolean digital) {
         this.description = description;
         this.digital = digital;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getDescription() {

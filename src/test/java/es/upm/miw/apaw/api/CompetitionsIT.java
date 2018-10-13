@@ -6,6 +6,7 @@ import es.upm.miw.apaw.api.apiController.PhotographerApiController;
 import es.upm.miw.apaw.api.daos.DaoFactory;
 import es.upm.miw.apaw.api.daos.memory.DaoMemoryFactory;
 import es.upm.miw.apaw.api.dtos.CompetitionDto;
+import es.upm.miw.apaw.api.dtos.CompetitionIdReferenceDto;
 import es.upm.miw.apaw.api.dtos.JuryDto;
 import es.upm.miw.apaw.api.dtos.PhotographerDto;
 import es.upm.miw.apaw.api.entities.Category;
@@ -19,8 +20,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CompetitionsIT {
 
@@ -31,38 +31,19 @@ public class CompetitionsIT {
         DaoFactory.setFactory(new DaoMemoryFactory());
     }
 
-    private List<String> createJuryList() {
-
-        List<String> juryList = new ArrayList<>();
-
-        for (int i = 0; i < MAX_ELEMENTS; i++) {
-            HttpRequest request = HttpRequest.builder(JuryApiController.JURIES).body(new JuryDto("jury" + i)).post();
-            juryList.add((String) new Client().submit(request).getBody());
-        }
-
-        return juryList;
-    }
-
-    private List<String> createPhotographerList() {
-        List<String> photographerList = new ArrayList<>();
-
-        for (int i = 0; i < MAX_ELEMENTS; i++) {
-            HttpRequest request = HttpRequest.builder(PhotographerApiController.PHOTOGRAPHERS).body(new PhotographerDto("photographer" + i)).post();
-            photographerList.add((String) new Client().submit(request).getBody());
-        }
-
-        return photographerList;
-    }
-
     @Test
-    void createCompetition() {
+    void testCreateCompetition() {
+        this.createCompetition("SENIOR MACRO");
+    }
+
+    private String createCompetition(String reference) {
         List<String> juryList = this.createJuryList();
         List<String> photographerList = this.createPhotographerList();
 
-        CompetitionDto competitionDto = new CompetitionDto("SENIOR MACRO", juryList, photographerList, Category.MACRO, 100);
+        CompetitionDto competitionDto = new CompetitionDto(reference, juryList, photographerList, Category.MACRO, 100);
 
         HttpRequest request = HttpRequest.builder(CompetitionApiController.COMPETITIONS).body(competitionDto).post();
-        new Client().submit(request);
+        return (String) new Client().submit(request).getBody();
     }
 
     @Test
@@ -141,6 +122,89 @@ public class CompetitionsIT {
 
         HttpRequest request = HttpRequest.builder(CompetitionApiController.COMPETITIONS).body(competitionDto).post();
 
+        HttpException exception = assertThrows(HttpException.class, () -> new Client().submit(request));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
+    }
+
+    private List<String> createJuryList() {
+
+        List<String> juryList = new ArrayList<>();
+
+        for (int i = 0; i < MAX_ELEMENTS; i++) {
+            HttpRequest request = HttpRequest.builder(JuryApiController.JURIES).body(new JuryDto("jury" + i)).post();
+            juryList.add((String) new Client().submit(request).getBody());
+        }
+
+        return juryList;
+    }
+
+    private List<String> createPhotographerList() {
+        List<String> photographerList = new ArrayList<>();
+
+        for (int i = 0; i < MAX_ELEMENTS; i++) {
+            HttpRequest request = HttpRequest.builder(PhotographerApiController.PHOTOGRAPHERS).body(new PhotographerDto("photographer" + i)).post();
+            photographerList.add((String) new Client().submit(request).getBody());
+        }
+
+        return photographerList;
+    }
+
+    @Test
+    void testReadAll() {
+        for (int i = 0; i < MAX_ELEMENTS; i++) {
+            this.createCompetition("competition" + i);
+        }
+
+        HttpRequest request = HttpRequest.builder(CompetitionApiController.COMPETITIONS).get();
+        List<CompetitionIdReferenceDto> competitions = (List<CompetitionIdReferenceDto>) new Client().submit(request).getBody();
+        assertTrue(competitions.size() >= MAX_ELEMENTS);
+    }
+
+
+    @Test
+    void testUpdateCategory() {
+        String id = this.createCompetition("MACRO");
+        HttpRequest request = HttpRequest.builder(CompetitionApiController.COMPETITIONS).path(CompetitionApiController.ID)
+                .expandPath(id).path(CompetitionApiController.CATEGORY).body(Category.WEDDING).patch();
+        new Client().submit(request);
+    }
+
+    @Test
+    void testSearchPriceCompetitionIsNotEmpty() {
+        this.createCompetition("uno");
+
+        HttpRequest request = HttpRequest.builder(CompetitionApiController.COMPETITIONS).path(CompetitionApiController.SEARCH)
+                .param("q", "price:>=100").get();
+        List<CompetitionIdReferenceDto> themes = (List<CompetitionIdReferenceDto>) new Client().submit(request).getBody();
+        assertFalse(themes.isEmpty());
+    }
+
+    @Test
+    void testSearchPriceCompetitionIsEmpty() {
+        this.createCompetition("uno");
+
+        HttpRequest request = HttpRequest.builder(CompetitionApiController.COMPETITIONS).path(CompetitionApiController.SEARCH)
+                .param("q", "price:>=800").get();
+        List<CompetitionIdReferenceDto> themes = (List<CompetitionIdReferenceDto>) new Client().submit(request).getBody();
+        assertTrue(themes.isEmpty());
+    }
+
+    @Test
+    void testSearchPriceWithoutParamQ() {
+        this.createCompetition("uno");
+
+        HttpRequest request = HttpRequest.builder(CompetitionApiController.COMPETITIONS).path(CompetitionApiController.SEARCH)
+                .param("error", "price:>=80").get();
+        HttpException exception = assertThrows(HttpException.class, () -> new Client().submit(request));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
+    }
+
+    @Test
+    void testSearchPriceParamError() {
+        this.createCompetition("uno");
+
+        HttpRequest request = HttpRequest.builder(CompetitionApiController.COMPETITIONS).path(CompetitionApiController.SEARCH)
+                .param("error", "error:>=80").get();
         HttpException exception = assertThrows(HttpException.class, () -> new Client().submit(request));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
     }
