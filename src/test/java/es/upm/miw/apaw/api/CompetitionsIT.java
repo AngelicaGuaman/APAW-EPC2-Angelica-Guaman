@@ -20,9 +20,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CompetitionsIT {
 
@@ -158,8 +156,8 @@ public class CompetitionsIT {
         }
 
         HttpRequest request = HttpRequest.builder(CompetitionApiController.COMPETITIONS).get();
-        List<CompetitionIdReferenceDto> themes = (List<CompetitionIdReferenceDto>) new Client().submit(request).getBody();
-        assertTrue(themes.size() >= MAX_ELEMENTS);
+        List<CompetitionIdReferenceDto> competitions = (List<CompetitionIdReferenceDto>) new Client().submit(request).getBody();
+        assertTrue(competitions.size() >= MAX_ELEMENTS);
     }
 
 
@@ -169,5 +167,45 @@ public class CompetitionsIT {
         HttpRequest request = HttpRequest.builder(CompetitionApiController.COMPETITIONS).path(CompetitionApiController.ID)
                 .expandPath(id).path(CompetitionApiController.CATEGORY).body(Category.WEDDING).patch();
         new Client().submit(request);
+    }
+
+    @Test
+    void testSearchPriceCompetitionIsNotEmpty() {
+        this.createCompetition("uno");
+
+        HttpRequest request = HttpRequest.builder(CompetitionApiController.COMPETITIONS).path(CompetitionApiController.SEARCH)
+                .param("q", "price:>=100").get();
+        List<CompetitionIdReferenceDto> themes = (List<CompetitionIdReferenceDto>) new Client().submit(request).getBody();
+        assertFalse(themes.isEmpty());
+    }
+
+    @Test
+    void testSearchPriceCompetitionIsEmpty() {
+        this.createCompetition("uno");
+
+        HttpRequest request = HttpRequest.builder(CompetitionApiController.COMPETITIONS).path(CompetitionApiController.SEARCH)
+                .param("q", "price:>=800").get();
+        List<CompetitionIdReferenceDto> themes = (List<CompetitionIdReferenceDto>) new Client().submit(request).getBody();
+        assertTrue(themes.isEmpty());
+    }
+
+    @Test
+    void testSearchPriceWithoutParamQ() {
+        this.createCompetition("uno");
+
+        HttpRequest request = HttpRequest.builder(CompetitionApiController.COMPETITIONS).path(CompetitionApiController.SEARCH)
+                .param("error", "price:>=80").get();
+        HttpException exception = assertThrows(HttpException.class, () -> new Client().submit(request));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
+    }
+
+    @Test
+    void testSearchPriceParamError() {
+        this.createCompetition("uno");
+
+        HttpRequest request = HttpRequest.builder(CompetitionApiController.COMPETITIONS).path(CompetitionApiController.SEARCH)
+                .param("error", "error:>=80").get();
+        HttpException exception = assertThrows(HttpException.class, () -> new Client().submit(request));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
     }
 }
