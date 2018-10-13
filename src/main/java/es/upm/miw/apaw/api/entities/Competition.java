@@ -25,6 +25,7 @@ public class Competition {
 
         this.category = category;
         this.reference = reference;
+        this.date = LocalDateTime.now();
         this.price = price;
         this.photographerList = photographerList;
         this.juryList = juryList;
@@ -84,5 +85,18 @@ public class Competition {
 
     public void setJuryList(List<Jury> juryList) {
         this.juryList = juryList;
+    }
+
+    @Override
+    public String toString() {
+        return "Competition{" +
+                "id='" + id + '\'' +
+                ", reference='" + reference + '\'' +
+                ", date=" + date +
+                ", category=" + category +
+                ", price=" + price +
+                ", juryList=" + juryList +
+                ", photographerList=" + photographerList +
+                '}';
     }
 }

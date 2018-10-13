@@ -3,6 +3,7 @@ package es.upm.miw.apaw.api.businessController;
 import es.upm.miw.apaw.api.daos.DaoFactory;
 import es.upm.miw.apaw.api.dtos.CompetitionDto;
 import es.upm.miw.apaw.api.dtos.CompetitionIdReferenceDto;
+import es.upm.miw.apaw.api.entities.Category;
 import es.upm.miw.apaw.api.entities.Competition;
 import es.upm.miw.apaw.api.entities.Jury;
 import es.upm.miw.apaw.api.entities.Photographer;
@@ -39,4 +40,12 @@ public class CompetitionBusinessController {
     public List<CompetitionIdReferenceDto> readAll() {
         return DaoFactory.getFactory().getCompetitionDao().findAll().stream().map(competition -> new CompetitionIdReferenceDto(competition)).collect(Collectors.toList());
     }
+
+    public void updateCategory(String competitionId, Category category) {
+        Competition competition = DaoFactory.getFactory().getCompetitionDao().read(competitionId)
+                .orElseThrow(() -> new NotFoundException("Competition (" + competitionId + ")"));
+        competition.setCategory(category);
+        DaoFactory.getFactory().getCompetitionDao().save(competition);
+    }
+
 }

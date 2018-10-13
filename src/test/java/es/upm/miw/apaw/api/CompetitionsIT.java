@@ -38,14 +38,14 @@ public class CompetitionsIT {
         this.createCompetition("SENIOR MACRO");
     }
 
-    private void createCompetition(String reference) {
+    private String createCompetition(String reference) {
         List<String> juryList = this.createJuryList();
         List<String> photographerList = this.createPhotographerList();
 
         CompetitionDto competitionDto = new CompetitionDto(reference, juryList, photographerList, Category.MACRO, 100);
 
         HttpRequest request = HttpRequest.builder(CompetitionApiController.COMPETITIONS).body(competitionDto).post();
-        new Client().submit(request);
+        return (String) new Client().submit(request).getBody();
     }
 
     @Test
@@ -128,17 +128,6 @@ public class CompetitionsIT {
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
     }
 
-    @Test
-    void testReadAll() {
-        for (int i = 0; i < MAX_ELEMENTS; i++) {
-            this.createCompetition("competition" + i);
-        }
-
-        HttpRequest request = HttpRequest.builder(CompetitionApiController.COMPETITIONS).get();
-        List<CompetitionIdReferenceDto> themes = (List<CompetitionIdReferenceDto>) new Client().submit(request).getBody();
-        assertTrue(themes.size() == MAX_ELEMENTS);
-    }
-
     private List<String> createJuryList() {
 
         List<String> juryList = new ArrayList<>();
@@ -160,5 +149,25 @@ public class CompetitionsIT {
         }
 
         return photographerList;
+    }
+
+    @Test
+    void testReadAll() {
+        for (int i = 0; i < MAX_ELEMENTS; i++) {
+            this.createCompetition("competition" + i);
+        }
+
+        HttpRequest request = HttpRequest.builder(CompetitionApiController.COMPETITIONS).get();
+        List<CompetitionIdReferenceDto> themes = (List<CompetitionIdReferenceDto>) new Client().submit(request).getBody();
+        assertTrue(themes.size() >= MAX_ELEMENTS);
+    }
+
+
+    @Test
+    void testUpdateCategory() {
+        String id = this.createCompetition("MACRO");
+        HttpRequest request = HttpRequest.builder(CompetitionApiController.COMPETITIONS).path(CompetitionApiController.ID)
+                .expandPath(id).path(CompetitionApiController.CATEGORY).body(Category.WEDDING).patch();
+        new Client().submit(request);
     }
 }

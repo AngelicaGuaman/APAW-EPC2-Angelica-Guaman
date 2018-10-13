@@ -5,6 +5,7 @@ import es.upm.miw.apaw.api.apiController.JuryApiController;
 import es.upm.miw.apaw.api.dtos.CompetitionDto;
 import es.upm.miw.apaw.api.dtos.JuryDto;
 import es.upm.miw.apaw.api.dtos.PhotographerDto;
+import es.upm.miw.apaw.api.entities.Category;
 import es.upm.miw.apaw.api.exceptions.ArgumentNotValidException;
 import es.upm.miw.apaw.api.exceptions.NotFoundException;
 import es.upm.miw.apaw.api.exceptions.RequestInvalidException;
@@ -35,7 +36,8 @@ public class Dispatcher {
                     this.doPut(request);
                     break;
                 case PATCH:
-                    throw new RequestInvalidException("method error: " + request.getMethod());
+                    this.doPatch(request);
+                    break;
                 case DELETE:
                     throw new RequestInvalidException("method error: " + request.getMethod());
                 default: // Unexpected
@@ -81,4 +83,13 @@ public class Dispatcher {
             throw new RequestInvalidException("request error: " + request.getMethod() + ' ' + request.getPath());
         }
     }
+
+    private void doPatch(HttpRequest request) {
+        if (request.isEqualsPath(CompetitionApiController.COMPETITIONS + CompetitionApiController.ID + CompetitionApiController.CATEGORY)) {
+            this.competitionApiController.updateCategory(request.getPath(1), (Category) request.getBody());
+        } else {
+            throw new RequestInvalidException("request error: " + request.getMethod() + ' ' + request.getPath());
+        }
+    }
+
 }
