@@ -1,5 +1,6 @@
 package es.upm.miw.apaw.api.daos.memory;
 
+import es.upm.miw.apaw.api.daos.CompetitionDao;
 import es.upm.miw.apaw.api.daos.DaoFactory;
 import es.upm.miw.apaw.api.daos.JuryDao;
 import es.upm.miw.apaw.api.daos.PhotographerDao;
@@ -9,6 +10,8 @@ public class DaoMemoryFactory extends DaoFactory {
     private PhotographerDao photographerDao;
 
     private JuryDao juryDao;
+
+    private CompetitionDao competitionDao;
 
     @Override
     public PhotographerDao getPhotographerDao() {
@@ -26,4 +29,15 @@ public class DaoMemoryFactory extends DaoFactory {
 
         return juryDao;
     }
+
+    @Override
+    public CompetitionDao getCompetitionDao() {
+        if (competitionDao == null) {
+            competitionDao = new CompetitionDaoMemory();
+        }
+
+        return competitionDao;
+    }
+
+
 }
