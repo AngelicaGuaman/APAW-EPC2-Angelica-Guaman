@@ -22,4 +22,6 @@ public abstract class DaoFactory {
     public abstract JuryDao getJuryDao();
 
     public abstract CompetitionDao getCompetitionDao();
+
+    public abstract CameraDao getCameraDao();
 }
