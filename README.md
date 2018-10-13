@@ -76,10 +76,10 @@ A continuación, se muestra el escenario escogido para el desarrollo de ésta pr
 ### POST /competitions
 #### Parámetros del cuerpo
 - `reference`: String (**requerido**)
+- `juryIdList`: List<String> (**requerido**)
+- `photographerIdList`: List<String> (**requerido**)
 - `category`: Category
 - `price`: Integer
-- `photographerId`: String
-- `juryId`: String
 #### Respuesta
 - 200 OK
   - `id`: String
@@ -91,7 +91,7 @@ A continuación, se muestra el escenario escogido para el desarrollo de ésta pr
 - 200 OK
   - `[ {id:String,reference:String} ]`
 ---
-### PATH /competitions/{id}/category
+### PATCH /competitions/{id}/category
 #### Parámetros del cuerpo
 - `category`: String (**requerido**)
 #### Respuesta
