@@ -1,6 +1,8 @@
 package es.upm.miw.apaw.api;
 
+import es.upm.miw.apaw.api.apiController.CompetitionApiController;
 import es.upm.miw.apaw.api.apiController.JuryApiController;
+import es.upm.miw.apaw.api.dtos.CompetitionDto;
 import es.upm.miw.apaw.api.dtos.JuryDto;
 import es.upm.miw.apaw.api.dtos.PhotographerDto;
 import es.upm.miw.apaw.api.exceptions.ArgumentNotValidException;
@@ -16,6 +18,8 @@ public class Dispatcher {
     private PhotographerApiController photographerApiController = new PhotographerApiController();
 
     private JuryApiController juryApiController = new JuryApiController();
+
+    private CompetitionApiController competitionApiController = new CompetitionApiController();
 
     public void submit(HttpRequest request, HttpResponse response) {
         String ERROR_MESSAGE = "{'error':'%S'}";
@@ -54,6 +58,8 @@ public class Dispatcher {
             response.setBody(this.photographerApiController.create((PhotographerDto) request.getBody()));
         } else if (request.isEqualsPath(juryApiController.JURIES)) {
             response.setBody(this.juryApiController.create((JuryDto) request.getBody()));
+        } else if (request.isEqualsPath(competitionApiController.COMPETITIONS)) {
+            response.setBody(this.competitionApiController.create((CompetitionDto) request.getBody()));
         } else {
             throw new RequestInvalidException("method error: " + request.getMethod());
         }
