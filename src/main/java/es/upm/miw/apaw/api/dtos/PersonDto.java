@@ -1,25 +1,13 @@
-package es.upm.miw.apaw.entities;
+package es.upm.miw.apaw.api.dtos;
 
-public class Jury {
-    private String id;
+public class PersonDto {
 
     private String nick;
 
     private String email;
 
-    public Jury(String id, String nick) {
-        this.id = id;
+    public PersonDto(String nick) {
         this.nick = nick;
-    }
-
-    public Jury(String id, String nick, String email) {
-        this.id = id;
-        this.nick = nick;
-        this.email = email;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getNick() {

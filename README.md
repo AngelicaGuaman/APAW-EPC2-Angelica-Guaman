@@ -21,9 +21,11 @@ A continuación, se muestra el escenario escogido para el desarrollo de ésta pr
 ## Diseño de entidades
 ![entities](https://github.com/AngelicaGuaman/APAW-EPC2-Angelica-Guaman/blob/develop/docs/entities/entities.png)
 
+## Diseño de entidades (con Herencia)
+![entities](https://github.com/AngelicaGuaman/APAW-EPC2-Angelica-Guaman/blob/develop/docs/entities/entities-inheritance.png)
 
 ## Arquitectura
-![themes-entities-class-diagram](https://github.com/AngelicaGuaman/APAW-EPC2-Angelica-Guaman/blob/develop/docs/architectura/themes-architecture-diagram.png)
+![themes-entities-class-diagram](https://github.com/AngelicaGuaman/APAW-EPC2-Angelica-Guaman/blob/develop/docs/architecture/themes-architecture-diagram.png)
 
 ### Responsabilidades
 #### Dispatcher
@@ -43,3 +45,77 @@ A continuación, se muestra el escenario escogido para el desarrollo de ésta pr
 #### entities
 * Son las entidades persistentes en la BD
 
+## API
+### POST /photographers
+#### Parámetros del cuerpo
+- `nick`: String (**requerido**)
+- `email`: String
+#### Respuesta
+- 200 OK
+  - `id`: String
+- 403 BAD_REQUEST
+---
+### PUT /photographers/{id}
+#### Parámetros del cuerpo
+- `nick`: String (**requerido**)
+- `email`: String
+#### Respuesta
+- 200 OK
+- 403 BAD_REQUEST
+- 404 NOT_FOUND
+---
+### POST /juries
+#### Parámetros del cuerpo
+- `nick`: String (**requerido**)
+- `email`: String
+#### Respuesta
+- 200 OK
+  - `id`: String
+- 403 BAD_REQUEST
+---
+### POST /competitions
+#### Parámetros del cuerpo
+- `reference`: String (**requerido**)
+- `juryIdList`: List<String> (**requerido**)
+- `photographerIdList`: List<String> (**requerido**)
+- `category`: Category
+- `price`: Integer
+#### Respuesta
+- 200 OK
+  - `id`: String
+- 403 BAD_REQUEST
+- 404 NOT_FOUND
+---
+### GET /competitions
+#### Respuesta
+- 200 OK
+  - `[ {id:String,reference:String} ]`
+---
+### PATCH /competitions/{id}/category
+#### Parámetros del cuerpo
+- `category`: String (**requerido**)
+#### Respuesta
+- 200 OK
+- 403 BAD_REQUEST
+- 404 NOT_FOUND
+---
+### GET /competitions/search?q=price:>=100
+#### Respuesta
+- 200 OK
+  - `[ {id:String,reference:String} ]`
+- 403 BAD_REQUEST
+---
+### POST /cameras
+#### Parámetros del cuerpo
+- `digital`: Boolean (**requerido**)
+- `description`: String (**requerido**)
+#### Respuesta
+- 200 OK
+- 403 BAD_REQUEST
+---
+### DELETE /cameras/{id}
+#### Respuesta
+- 200 OK
+---
+
+##### Autor: Angélica Guamán Albarracín

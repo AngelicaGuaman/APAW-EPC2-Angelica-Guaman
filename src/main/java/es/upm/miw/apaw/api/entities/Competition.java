@@ -1,32 +1,30 @@
-package es.upm.miw.apaw.entities;
+package es.upm.miw.apaw.api.entities;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class PhotographyCompetition {
+public class Competition {
     private String id;
 
     private Category category;
 
-    private String description;
+    private String reference;
 
     private LocalDateTime date;
 
-    private int price;
+    private Integer price;
 
     private List<Photographer> photographerList;
 
     private List<Jury> juryList;
 
-    public PhotographyCompetition(String id) {
-        this.id = id;
-    }
+    public Competition(Category category, String reference, Integer price, List<Photographer> photographerList, List<Jury> juryList) {
+        assert reference != null;
+        assert juryList != null;
+        assert photographerList != null;
 
-    public PhotographyCompetition(String id, Category category, String description, LocalDateTime date, int price, List<Photographer> photographerList, List<Jury> juryList) {
-        this.id = id;
         this.category = category;
-        this.description = description;
-        this.date = date;
+        this.reference = reference;
         this.price = price;
         this.photographerList = photographerList;
         this.juryList = juryList;
@@ -34,6 +32,10 @@ public class PhotographyCompetition {
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Category getCategory() {
@@ -44,12 +46,12 @@ public class PhotographyCompetition {
         this.category = category;
     }
 
-    public String getDescription() {
-        return description;
+    public String getReference() {
+        return reference;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setReference(String reference) {
+        this.reference = reference;
     }
 
     public LocalDateTime getDate() {
@@ -60,11 +62,11 @@ public class PhotographyCompetition {
         this.date = date;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 

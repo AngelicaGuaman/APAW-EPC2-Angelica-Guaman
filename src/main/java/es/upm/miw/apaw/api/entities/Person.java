@@ -1,13 +1,13 @@
-package es.upm.miw.apaw.entities;
+package es.upm.miw.apaw.api.entities;
 
-public class Photographer {
+public class Person {
     private String id;
 
     private String nick;
 
     private String email;
 
-    public Photographer(String id, String nick) {
+    public Person(String id, String nick) {
         this.id = id;
         this.nick = nick;
         this.email = "";
@@ -17,12 +17,8 @@ public class Photographer {
         return id;
     }
 
-    public String getNick() {
-        return nick;
-    }
-
-    public void setNick(String nick) {
-        this.nick = nick;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getEmail() {
@@ -31,5 +27,13 @@ public class Photographer {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getNick() {
+        return nick;
+    }
+
+    public void setNick(String nick) {
+        this.nick = nick;
     }
 }
