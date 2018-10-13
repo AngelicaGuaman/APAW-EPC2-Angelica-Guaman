@@ -12,8 +12,7 @@ import es.upm.miw.apaw.http.HttpStatus;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CamerasIT {
 
@@ -51,5 +50,25 @@ public class CamerasIT {
         HttpRequest request = HttpRequest.builder(CameraApiController.CAMERAS).body(new CameraDto(null, false)).post();
         HttpException exception = assertThrows(HttpException.class, () -> new Client().submit(request));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
+    }
+
+    @Test
+    void testDeleteWithCorrectId() {
+        String id = this.createCamera();
+
+        HttpRequest request = HttpRequest.builder(CameraApiController.CAMERAS).path(CameraApiController.ID)
+                .expandPath(id).delete();
+
+        assertEquals(HttpStatus.OK, (HttpStatus) new Client().submit(request).getStatus());
+    }
+
+    @Test
+    void testDeleteWithIdNull() {
+        String id = null;
+
+        HttpRequest request = HttpRequest.builder(CameraApiController.CAMERAS).path(CameraApiController.ID)
+                .expandPath(id).delete();
+
+        assertEquals(HttpStatus.OK, (HttpStatus) new Client().submit(request).getStatus());
     }
 }

@@ -8,6 +8,8 @@ public class CameraApiController {
 
     public static final String CAMERAS = "/cameras";
 
+    public static final String ID = "/{id}";
+
     private CameraBusinessController cameraBusinessController = new CameraBusinessController();
 
     public String create(CameraDto cameraDto) {
@@ -21,5 +23,9 @@ public class CameraApiController {
         if (property == null) {
             throw new ArgumentNotValidException(message + "is NULL");
         }
+    }
+
+    public void delete(String id) {
+        this.cameraBusinessController.delete(id);
     }
 }
