@@ -18,15 +18,13 @@ public class Competition {
 
     private List<Jury> juryList;
 
-    public Competition(String id) {
-        this.id = id;
-    }
+    public Competition(Category category, String reference, Integer price, List<Photographer> photographerList, List<Jury> juryList) {
+        assert reference != null;
+        assert juryList != null;
+        assert photographerList != null;
 
-    public Competition(String id, Category category, String reference, LocalDateTime date, Integer price, List<Photographer> photographerList, List<Jury> juryList) {
-        this.id = id;
         this.category = category;
         this.reference = reference;
-        this.date = date;
         this.price = price;
         this.photographerList = photographerList;
         this.juryList = juryList;
@@ -34,6 +32,10 @@ public class Competition {
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Category getCategory() {
