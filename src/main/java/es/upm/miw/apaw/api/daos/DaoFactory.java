@@ -18,4 +18,6 @@ public abstract class DaoFactory {
     }
 
     public abstract PhotographerDao getPhotographerDao();
+
+    public abstract JuryDao getJuryDao();
 }
