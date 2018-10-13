@@ -7,18 +7,17 @@ public class Camera {
 
     private boolean digital;
 
-    public Camera(String id) {
-        this.id = id;
-    }
-
-    public Camera(String id, String description, boolean digital) {
-        this.id = id;
+    public Camera(String description, boolean digital) {
         this.description = description;
         this.digital = digital;
     }
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getDescription() {
