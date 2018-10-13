@@ -2,7 +2,10 @@ package es.upm.miw.apaw.api.apiController;
 
 import es.upm.miw.apaw.api.businessController.CompetitionBusinessController;
 import es.upm.miw.apaw.api.dtos.CompetitionDto;
+import es.upm.miw.apaw.api.dtos.CompetitionIdReferenceDto;
 import es.upm.miw.apaw.api.exceptions.ArgumentNotValidException;
+
+import java.util.List;
 
 public class CompetitionApiController {
 
@@ -24,5 +27,9 @@ public class CompetitionApiController {
         if (property == null) {
             throw new ArgumentNotValidException(message + "is NULL");
         }
+    }
+
+    public List<CompetitionIdReferenceDto> readAll() {
+        return this.competitionBusinessController.readAll();
     }
 }
