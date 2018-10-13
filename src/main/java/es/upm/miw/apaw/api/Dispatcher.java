@@ -1,7 +1,9 @@
 package es.upm.miw.apaw.api;
 
+import es.upm.miw.apaw.api.apiController.CameraApiController;
 import es.upm.miw.apaw.api.apiController.CompetitionApiController;
 import es.upm.miw.apaw.api.apiController.JuryApiController;
+import es.upm.miw.apaw.api.dtos.CameraDto;
 import es.upm.miw.apaw.api.dtos.CompetitionDto;
 import es.upm.miw.apaw.api.dtos.JuryDto;
 import es.upm.miw.apaw.api.dtos.PhotographerDto;
@@ -21,6 +23,8 @@ public class Dispatcher {
     private JuryApiController juryApiController = new JuryApiController();
 
     private CompetitionApiController competitionApiController = new CompetitionApiController();
+
+    private CameraApiController cameraApiController = new CameraApiController();
 
     public void submit(HttpRequest request, HttpResponse response) {
         String ERROR_MESSAGE = "{'error':'%S'}";
@@ -63,6 +67,8 @@ public class Dispatcher {
             response.setBody(this.juryApiController.create((JuryDto) request.getBody()));
         } else if (request.isEqualsPath(CompetitionApiController.COMPETITIONS)) {
             response.setBody(this.competitionApiController.create((CompetitionDto) request.getBody()));
+        } else if (request.isEqualsPath(CameraApiController.CAMERAS)) {
+            response.setBody(this.cameraApiController.create((CameraDto) request.getBody()));
         } else {
             throw new RequestInvalidException("method error: " + request.getMethod());
         }
