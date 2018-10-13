@@ -48,4 +48,11 @@ public class CompetitionBusinessController {
         DaoFactory.getFactory().getCompetitionDao().save(competition);
     }
 
+
+    public List<CompetitionIdReferenceDto> findByPriceGreaterThanEqual(Integer value) {
+        return DaoFactory.getFactory().getCompetitionDao().findAll().stream()
+                .filter(competition -> competition.getPrice() >= value)
+                .map(CompetitionIdReferenceDto::new)
+                .collect(Collectors.toList());
+    }
 }

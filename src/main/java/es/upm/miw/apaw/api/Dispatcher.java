@@ -71,6 +71,8 @@ public class Dispatcher {
     private void doGet(HttpRequest request, HttpResponse response) {
         if (request.isEqualsPath(CompetitionApiController.COMPETITIONS)) {
             response.setBody(this.competitionApiController.readAll());
+        } else if (request.isEqualsPath(CompetitionApiController.COMPETITIONS + CompetitionApiController.SEARCH)) {
+            response.setBody(this.competitionApiController.find(request.getParams().get("q")));
         } else {
             throw new RequestInvalidException("method error: " + request.getMethod() + ' ' + request.getPath());
         }

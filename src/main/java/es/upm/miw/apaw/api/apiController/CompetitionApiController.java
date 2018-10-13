@@ -12,11 +12,13 @@ public class CompetitionApiController {
 
     public static final String COMPETITIONS = "/competitions";
 
-    private CompetitionBusinessController competitionBusinessController = new CompetitionBusinessController();
-
     public static final String ID = "/{id}";
 
     public static final String CATEGORY = "/category";
+
+    public static final String SEARCH = "/search";
+
+    private CompetitionBusinessController competitionBusinessController = new CompetitionBusinessController();
 
     public String create(CompetitionDto competitionDto) {
         this.validate(competitionDto, "competitionDto");
@@ -28,12 +30,6 @@ public class CompetitionApiController {
         return this.competitionBusinessController.create(competitionDto);
     }
 
-    private void validate(Object property, String message) {
-        if (property == null) {
-            throw new ArgumentNotValidException(message + "is NULL");
-        }
-    }
-
     public List<CompetitionIdReferenceDto> readAll() {
         return this.competitionBusinessController.readAll();
     }
@@ -41,5 +37,19 @@ public class CompetitionApiController {
     public void updateCategory(String competitionId, Category category) {
         this.validate(category, "category");
         this.competitionBusinessController.updateCategory(competitionId, category);
+    }
+
+    public List<CompetitionIdReferenceDto> find(String query) {
+        this.validate(query, "query param q");
+        if (!"price".equals(query.split(":>=")[0])) {
+            throw new ArgumentNotValidException("query param q is incorrect, missing 'price:>='");
+        }
+        return this.competitionBusinessController.findByPriceGreaterThanEqual(Integer.valueOf(query.split(":>=")[1]));
+    }
+
+    private void validate(Object property, String message) {
+        if (property == null) {
+            throw new ArgumentNotValidException(message + "is NULL");
+        }
     }
 }
