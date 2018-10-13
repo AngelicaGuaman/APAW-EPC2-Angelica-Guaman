@@ -43,7 +43,8 @@ public class Dispatcher {
                     this.doPatch(request);
                     break;
                 case DELETE:
-                    throw new RequestInvalidException("method error: " + request.getMethod());
+                    this.doDelete(request);
+                    break;
                 default: // Unexpected
                     throw new RequestInvalidException("method error: " + request.getMethod());
             }
@@ -95,6 +96,14 @@ public class Dispatcher {
     private void doPatch(HttpRequest request) {
         if (request.isEqualsPath(CompetitionApiController.COMPETITIONS + CompetitionApiController.ID + CompetitionApiController.CATEGORY)) {
             this.competitionApiController.updateCategory(request.getPath(1), (Category) request.getBody());
+        } else {
+            throw new RequestInvalidException("request error: " + request.getMethod() + ' ' + request.getPath());
+        }
+    }
+
+    private void doDelete(HttpRequest request) {
+        if (request.isEqualsPath(CameraApiController.CAMERAS + CameraApiController.ID)) {
+            this.cameraApiController.delete(request.getPath(1));
         } else {
             throw new RequestInvalidException("request error: " + request.getMethod() + ' ' + request.getPath());
         }
