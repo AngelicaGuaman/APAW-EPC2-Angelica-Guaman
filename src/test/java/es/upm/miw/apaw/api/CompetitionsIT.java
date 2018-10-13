@@ -6,6 +6,7 @@ import es.upm.miw.apaw.api.apiController.PhotographerApiController;
 import es.upm.miw.apaw.api.daos.DaoFactory;
 import es.upm.miw.apaw.api.daos.memory.DaoMemoryFactory;
 import es.upm.miw.apaw.api.dtos.CompetitionDto;
+import es.upm.miw.apaw.api.dtos.CompetitionIdReferenceDto;
 import es.upm.miw.apaw.api.dtos.JuryDto;
 import es.upm.miw.apaw.api.dtos.PhotographerDto;
 import es.upm.miw.apaw.api.entities.Category;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CompetitionsIT {
 
@@ -31,35 +33,16 @@ public class CompetitionsIT {
         DaoFactory.setFactory(new DaoMemoryFactory());
     }
 
-    private List<String> createJuryList() {
-
-        List<String> juryList = new ArrayList<>();
-
-        for (int i = 0; i < MAX_ELEMENTS; i++) {
-            HttpRequest request = HttpRequest.builder(JuryApiController.JURIES).body(new JuryDto("jury" + i)).post();
-            juryList.add((String) new Client().submit(request).getBody());
-        }
-
-        return juryList;
-    }
-
-    private List<String> createPhotographerList() {
-        List<String> photographerList = new ArrayList<>();
-
-        for (int i = 0; i < MAX_ELEMENTS; i++) {
-            HttpRequest request = HttpRequest.builder(PhotographerApiController.PHOTOGRAPHERS).body(new PhotographerDto("photographer" + i)).post();
-            photographerList.add((String) new Client().submit(request).getBody());
-        }
-
-        return photographerList;
-    }
-
     @Test
-    void createCompetition() {
+    void testCreateCompetition() {
+        this.createCompetition("SENIOR MACRO");
+    }
+
+    private void createCompetition(String reference) {
         List<String> juryList = this.createJuryList();
         List<String> photographerList = this.createPhotographerList();
 
-        CompetitionDto competitionDto = new CompetitionDto("SENIOR MACRO", juryList, photographerList, Category.MACRO, 100);
+        CompetitionDto competitionDto = new CompetitionDto(reference, juryList, photographerList, Category.MACRO, 100);
 
         HttpRequest request = HttpRequest.builder(CompetitionApiController.COMPETITIONS).body(competitionDto).post();
         new Client().submit(request);
@@ -143,5 +126,39 @@ public class CompetitionsIT {
 
         HttpException exception = assertThrows(HttpException.class, () -> new Client().submit(request));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
+    }
+
+    @Test
+    void testReadAll() {
+        for (int i = 0; i < MAX_ELEMENTS; i++) {
+            this.createCompetition("competition" + i);
+        }
+
+        HttpRequest request = HttpRequest.builder(CompetitionApiController.COMPETITIONS).get();
+        List<CompetitionIdReferenceDto> themes = (List<CompetitionIdReferenceDto>) new Client().submit(request).getBody();
+        assertTrue(themes.size() == MAX_ELEMENTS);
+    }
+
+    private List<String> createJuryList() {
+
+        List<String> juryList = new ArrayList<>();
+
+        for (int i = 0; i < MAX_ELEMENTS; i++) {
+            HttpRequest request = HttpRequest.builder(JuryApiController.JURIES).body(new JuryDto("jury" + i)).post();
+            juryList.add((String) new Client().submit(request).getBody());
+        }
+
+        return juryList;
+    }
+
+    private List<String> createPhotographerList() {
+        List<String> photographerList = new ArrayList<>();
+
+        for (int i = 0; i < MAX_ELEMENTS; i++) {
+            HttpRequest request = HttpRequest.builder(PhotographerApiController.PHOTOGRAPHERS).body(new PhotographerDto("photographer" + i)).post();
+            photographerList.add((String) new Client().submit(request).getBody());
+        }
+
+        return photographerList;
     }
 }

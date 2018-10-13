@@ -29,7 +29,8 @@ public class Dispatcher {
                     this.doPost(request, response);
                     break;
                 case GET:
-                    throw new RequestInvalidException("method error: " + request.getMethod());
+                    this.doGet(request, response);
+                    break;
                 case PUT:
                     this.doPut(request);
                     break;
@@ -56,12 +57,20 @@ public class Dispatcher {
     private void doPost(HttpRequest request, HttpResponse response) {
         if (request.isEqualsPath(PhotographerApiController.PHOTOGRAPHERS)) {
             response.setBody(this.photographerApiController.create((PhotographerDto) request.getBody()));
-        } else if (request.isEqualsPath(juryApiController.JURIES)) {
+        } else if (request.isEqualsPath(JuryApiController.JURIES)) {
             response.setBody(this.juryApiController.create((JuryDto) request.getBody()));
-        } else if (request.isEqualsPath(competitionApiController.COMPETITIONS)) {
+        } else if (request.isEqualsPath(CompetitionApiController.COMPETITIONS)) {
             response.setBody(this.competitionApiController.create((CompetitionDto) request.getBody()));
         } else {
             throw new RequestInvalidException("method error: " + request.getMethod());
+        }
+    }
+
+    private void doGet(HttpRequest request, HttpResponse response) {
+        if (request.isEqualsPath(CompetitionApiController.COMPETITIONS)) {
+            response.setBody(this.competitionApiController.readAll());
+        } else {
+            throw new RequestInvalidException("method error: " + request.getMethod() + ' ' + request.getPath());
         }
     }
 
