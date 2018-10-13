@@ -3,6 +3,7 @@ package es.upm.miw.apaw.api.apiController;
 import es.upm.miw.apaw.api.businessController.CompetitionBusinessController;
 import es.upm.miw.apaw.api.dtos.CompetitionDto;
 import es.upm.miw.apaw.api.dtos.CompetitionIdReferenceDto;
+import es.upm.miw.apaw.api.entities.Category;
 import es.upm.miw.apaw.api.exceptions.ArgumentNotValidException;
 
 import java.util.List;
@@ -12,6 +13,10 @@ public class CompetitionApiController {
     public static final String COMPETITIONS = "/competitions";
 
     private CompetitionBusinessController competitionBusinessController = new CompetitionBusinessController();
+
+    public static final String ID = "/{id}";
+
+    public static final String CATEGORY = "/category";
 
     public String create(CompetitionDto competitionDto) {
         this.validate(competitionDto, "competitionDto");
@@ -31,5 +36,10 @@ public class CompetitionApiController {
 
     public List<CompetitionIdReferenceDto> readAll() {
         return this.competitionBusinessController.readAll();
+    }
+
+    public void updateCategory(String competitionId, Category category) {
+        this.validate(category, "category");
+        this.competitionBusinessController.updateCategory(competitionId, category);
     }
 }
